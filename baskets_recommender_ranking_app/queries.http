@@ -1,0 +1,164 @@
+# global variables
+# use: `vespa status` to get that vespa_url.
+@vespa_url = https://d3800e3e.c66e5c39.z.vespa-app.cloud
+
+
+### 1 Query: What items are frequently bought with "whole milk"?
+POST {{vespa_url}}/search/
+Content-Type: application/json
+
+{
+  "hits": 1,
+  "select": {
+    "where": {
+      "contains": ["items", "whole milk"]
+    },
+    "grouping": [
+      {
+        "all": {
+          "group": "items",
+          "order": "-count()",
+          "each": {
+            "output": "count()"
+          }
+        }
+      }
+    ]
+  }
+}
+
+
+### 2 Query: What items are frequently bought with "yogurt"?
+POST {{vespa_url}}/search/
+Content-Type: application/json
+
+{
+  "hits": 1,
+  "select": {
+    "where": {
+      "contains": ["items", "yogurt"]
+    },
+    "grouping": [
+      {
+        "all": {
+          "group": "items",
+          "order": "-count()",
+          "max": 10,
+          "each": {
+            "output": "count()"
+          }
+        }
+      }
+    ]
+  }
+}
+
+
+
+
+### 3 Query: Which categories are available?
+POST {{vespa_url}}/search/
+Content-Type: application/json
+
+{
+  "hits": 0,
+  "select": {
+    "where": true,
+    "grouping": [
+      {
+        "all": {
+          "group": "category",
+          "each": {
+            "output": "count()"
+          }
+        }
+      }
+    ]
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### 4 Query: Global recommendations
+POST {{vespa_url}}/search/
+Content-Type: application/json
+
+{
+  "yql": "select * from sources * where true",
+  "ranking.features.query(user_profile)": "{\"Books\": {\"poetry\": 5, \"spirituality\": 2}, \"Electronics\":{\"USB cable\": 7}}",
+  "ranking.profile": "recommendations"
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### 5 Query: Per-category recommendations
+POST {{vespa_url}}/search/
+Content-Type: application/json
+
+{
+  "yql": "select * from product where category contains 'Books'",
+  "ranking.features.query(user_profile)": "{\"Books\": {\"poetry\": 5, \"spirituality\": 2}, \"Electronics\":{\"USB cable\": 7}}",
+  "ranking.profile": "recommendations"
+}

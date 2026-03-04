@@ -1,0 +1,48 @@
+# global variables
+# use: `vespa status` to get that vespa_url.
+@vespa_url= https://e32abb57.c66e5c39.z.vespa-app.cloud
+
+### step 1) search for shirt, default rank profile
+POST {{vespa_url}}/search/
+Content-Type: application/json
+
+{
+  "yql": "select * from product where ProductName contains 'shirt'"
+}
+
+### step 2) search for shirt, custom rank profile
+POST {{vespa_url}}/search/
+Content-Type: application/json
+
+{
+  "yql": "select * from product where ProductName contains 'shirt'",
+  "ranking.profile": "bm25"
+}
+
+### step 3) search for shirt in both title and description, combining signals
+POST {{vespa_url}}/search/
+Content-Type: application/json
+
+{
+  "yql": "select * from product where ProductName contains 'shirt' OR Description contains 'shirt'",
+  "ranking.profile": "nativeRankBM25"
+}
+
+### step 4) search for shirt in both title and description, with rating boost
+POST {{vespa_url}}/search/
+Content-Type: application/json
+
+{
+  "yql": "select * from product where ProductName contains 'shirt' OR Description contains 'shirt'",
+  "ranking.profile": "ratingboost"
+}
+
+### step 5) add user preferences
+POST {{vespa_url}}/search/
+Content-Type: application/json
+
+{
+  "yql": "select * from product where ProductName contains 'shirt' OR Description contains 'shirt'",
+  "ranking.features.query(user_preferences)": "{{features:GenderWomen}:1,{features:GenderUnisex}:0.7,{features:PriceFactor}:3}",
+  "ranking.profile": "preferences"
+}

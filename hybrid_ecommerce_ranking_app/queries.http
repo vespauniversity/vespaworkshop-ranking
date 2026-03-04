@@ -1,0 +1,27 @@
+# global variables
+# use: `vespa status` to get that vespa_url.
+@vespa_url = https://ae706e3a.c66e5c39.z.vespa-app.cloud
+
+### hybrid query
+POST {{vespa_url}}/search/
+Content-Type: application/json
+
+{
+  "yql": "select * from product where ({targetHits:100}nearestNeighbor(ProductName_embedding,q_embedding)) OR ({targetHits:100}nearestNeighbor(Description_embedding,q_embedding)) OR userQuery()",
+  "query": "home decor items",
+  "input.query(q_embedding)": "embed(@query)",
+  "ranking.profile": "hybrid",
+  "hits": 20
+}
+
+### rerank query
+POST {{vespa_url}}/search/
+Content-Type: application/json
+
+{
+  "yql": "select * from product where ({targetHits:100}nearestNeighbor(ProductName_embedding,q_embedding)) OR ({targetHits:100}nearestNeighbor(Description_embedding,q_embedding)) OR userQuery()",
+  "query": "home decor items",
+  "input.query(q_embedding)": "embed(@query)",
+  "ranking.profile": "rerank",
+  "hits": 20
+}

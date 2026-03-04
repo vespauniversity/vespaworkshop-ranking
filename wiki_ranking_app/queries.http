@@ -1,0 +1,129 @@
+# global variables
+# use: `vespa status` to get that vespa_url.
+@vespa_url = https://ea95906f.c66e5c39.z.vespa-app.cloud
+
+### 0. How does data look like?
+POST {{vespa_url}}/search/
+Content-Type: application/json
+
+{
+  "yql": "select * from article where true"
+}
+
+### 1. Hybrid search on article as a whole
+### NOTE: we match on per-chunk embeddings but we don't rank on them (yet)
+POST {{vespa_url}}/search/
+Content-Type: application/json
+
+{
+  "yql": "select * from article where ({targetHits:100}nearestNeighbor(article_title_embedding,q_embedding)) OR ({targetHits:100}nearestNeighbor(chunk_embeddings,q_embedding)) OR userQuery()",
+  "query": "binary entropy",
+  "input.query(q_embedding)": "embed(@query)",
+  "ranking.profile": "per_doc"
+}
+
+### 2. Lexical search per chunk
+POST {{vespa_url}}/search/
+Content-Type: application/json
+
+{
+  "yql": "select * from article where userQuery()",
+  "query": "binary entropy",
+  "ranking.profile": "per_chunk_lexical",
+  "summary": "top_3_chunks_bm25"
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### 3. Semantic search per chunk
+POST {{vespa_url}}/search/
+Content-Type: application/json
+
+{
+  "yql": "select * from article where {targetHits:100}nearestNeighbor(chunk_embeddings,q_embedding)",
+  "query": "binary entropy",
+  "input.query(q_embedding)": "embed(@query)",
+  "ranking.profile": "per_chunk_semantic",
+  "summary": "top_3_chunks_semantic"
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### 4. Article+chunk hybrid search
+POST {{vespa_url}}/search/
+Content-Type: application/json
+
+{
+  "yql": "select * from article where ({targetHits:100}nearestNeighbor(article_title_embedding,q_embedding)) OR ({targetHits:100}nearestNeighbor(chunk_embeddings,q_embedding)) OR userQuery()",
+  "query": "binary entropy",
+  "input.query(q_embedding)": "embed(@query)",
+  "ranking.profile": "doc_and_chunks_hybrid",
+  "summary": "top_3_chunks_by_hybrid_score"
+}
+

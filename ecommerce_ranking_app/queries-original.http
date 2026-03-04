@@ -1,0 +1,36 @@
+### 1) search for shirt, default rank profile
+POST https://<mTLS_ENDPOINT_DNS_GOES_HERE>/search/
+Content-Type: application/json
+
+{
+  "yql": "select * from product where ProductName contains 'shirt'"
+}
+
+### 2) search for shirt, custom rank profile
+POST https://<mTLS_ENDPOINT_DNS_GOES_HERE>/search/
+Content-Type: application/json
+
+{
+  "yql": "select * from product where ProductName contains 'shirt'",
+  "ranking.profile": "bm25"
+}
+
+### 3) search for shirt in both title and description
+POST https://<mTLS_ENDPOINT_DNS_GOES_HERE>/search/
+Content-Type: application/json
+
+{
+  "yql": "select * from product where ProductName contains 'shirt' OR Description contains 'shirt'",
+  "ranking.profile": "ratingboost"
+}
+
+
+### 4) add user preferences
+POST https://<mTLS_ENDPOINT_DNS_GOES_HERE>/search/
+Content-Type: application/json
+
+{
+  "yql": "select * from product where ProductName contains 'shirt' OR Description contains 'shirt'",
+  "ranking.features.query(user_preferences)": "{{features:GenderWomen}:1,{features:GenderUnisex}:0.7,{features:PriceFactor}:3}",
+  "ranking.profile": "preferences"
+}
