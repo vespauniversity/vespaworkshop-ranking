@@ -280,7 +280,7 @@ Benefits:
 
 **Step 1: Define Features in Rank Profile**
 ```vespa
-rank-profile collect-features {
+rank-profile collect_features {
     function my_bm25() {
         expression: bm25(ProductName)
     }
@@ -312,7 +312,7 @@ rank-profile collect-features {
 vespa query \
   'yql=select * from product where userQuery()' \
   'query=running shoes' \
-  'ranking.profile=collect-features' \
+  'ranking.profile=collect_features' \
   'hits=100'
 ```
 
@@ -368,7 +368,7 @@ cd train_reranker
 # Extract features from search results
 python create_prediction_data.py \
   --queries ../evaluation/queries.csv \
-  --ranking-profile collect-features \
+  --ranking-profile collect_features \
   --output features.csv
 ```
 
@@ -1191,7 +1191,7 @@ rank-profile rerank inherits hybrid {
 
 **Alternatively**, use the provided solution:
 ```bash
-cd hybrid_ecommerce_ranking_app/solutions/rerank.profile hybrid_ecommerce_ranking_app/app/schemas/product/
+cp hybrid_ecommerce_ranking_app/solutions/rerank.profile hybrid_ecommerce_ranking_app/app/schemas/product/
 ```
 
 **Profile components:**

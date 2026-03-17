@@ -1051,7 +1051,7 @@ If you **haven't set up Vespa yet**, do that first using the basic setup from Ch
 
 **Step 1: Deploy application**
 ```bash
-cd baskets_ranking_app/app
+cd baskets_recommender_ranking_app/baskets_app
 
 # Verify configuration
 vespa config get target        # Should show: cloud

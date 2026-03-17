@@ -9,6 +9,9 @@ schema product {
        # full-text search => index
        field ProductName type string {
            indexing: summary | index
+           index {
+               enable-bm25
+           }
        }
 
 
@@ -48,7 +51,7 @@ schema product {
        }
 
        # use in ranking
-       field AverageRating type string {
+       field AverageRating type float {
           indexing: summary | attribute
        }
 

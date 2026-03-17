@@ -1221,13 +1221,13 @@ To test your implementations, copy them to the schema directory:
 
 ```bash
 # Copy your completed profile to test it
-cp assignments/per_doc.profile wiki_app/schemas/article/
-cp assignments/per_chunk_lexical.profile wiki_app/schemas/article/
-cp assignments/per_chunk_semantic.profile wiki_app/schemas/article/
-cp assignments/doc_and_chunks_hybrid.profile wiki_app/schemas/article/
+cp assignments/per_doc.profile wiki_ranking_app/app/schemas/article/
+cp assignments/per_chunk_lexical.profile wiki_ranking_app/app/schemas/article/
+cp assignments/per_chunk_semantic.profile wiki_ranking_app/app/schemas/article/
+cp assignments/doc_and_chunks_hybrid.profile wiki_ranking_app/app/schemas/article/
 
 # Redeploy to activate profiles
-cd wiki_rating_app/app
+cd wiki_ranking_app/app
 vespa deploy --wait 300
 ```
 
